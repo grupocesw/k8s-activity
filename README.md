@@ -3,9 +3,10 @@
 # Run test by SH
 sh 1.config-minikube.sh</br>
 sh 2.create-pods.sh</br>
-sh 3.install-iputils-ping-nginx.sh</br>
-sh 4.ping-nignx-to-mysql-service.sh</br>
-sh 5.open-nginx-browser.sh
+sh 3.install-iputils-ping-nmap-nginx.sh</br>
+sh 4.nmap-nignx-to-mysql-service.sh</br>
+sh 5.ping-nignx-to-mysql-service.sh</br>
+sh 6.open-nginx-browser.sh
 
 # Config Memory, CPUs and Disk size in minikube
 minikube config set memory 3096</br>
@@ -33,14 +34,18 @@ kubectl delete -f ./k8s
 
 # Install iputils-ping in nginx container
 kubectl exec -it nginx-pod -c nginx -- apt update</br>
-kubectl exec -it nginx-pod -c nginx -- apt install -y iputils-ping
+kubectl exec -it nginx-pod -c nginx -- apt install -y iputils-ping nmap
 
 # Access nginx and mysql containers in pods
 kubectl exec -it nginx-pod -c nginx -- bash</br>
 kubectl exec -it mysql-pod -c db-mysql -- bash
 
-# Exec nginx pd ping to mysql service
+# Exec nginx ping to mysql service
+nmap -p 3306 mysql-service
 kubectl exec -it nginx-pod -c nginx -- ping mysql-service
+
+# Exec nginx nmap to mysql-service and port 3306
+nmap -p 3306 mysql-service
 
 # Show url and port nginx service to external access
 minikube service nginx-service --url</br>
